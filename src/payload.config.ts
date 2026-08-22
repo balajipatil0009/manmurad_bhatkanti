@@ -51,7 +51,15 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL,
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT || 12808),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD ,
+      database: process.env.DB_NAME ,
+      ssl: {
+        rejectUnauthorized: true,
+        ca: process.env.AIVEN_CA_CERT,
+      },
     },
     push: false,
     migrationDir: path.resolve(dirname, "migrations"),

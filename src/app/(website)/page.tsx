@@ -202,6 +202,7 @@ export default async function Home() {
             alt={`${siteName} Logo`}
             width={500}
             height={500}
+            priority
             className="h-32 sm:h-40 w-auto object-contain drop-shadow-2xl mb-2"
           />
           <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-primary">
@@ -251,13 +252,13 @@ export default async function Home() {
                 key={trek.slug}
                 className="snap-start shrink-0 w-[85%] sm:w-[400px] bg-white rounded-3xl overflow-hidden border border-black/5 shadow-sm flex flex-col justify-between"
               >
-                <div className="relative card-zoom">
+                <div className="relative card-zoom h-56">
                   <Image
                     src={imageUrl}
                     alt={trek.imageAlt || trek.name}
-                    width={400}
-                    height={224}
-                    className="w-full h-56 object-cover"
+                    fill
+                    sizes="(max-width: 640px) 85vw, 400px"
+                    className="object-cover"
                   />
                   {trek.badge && (
                     <span className="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow">
@@ -319,13 +320,13 @@ export default async function Home() {
                 key={trek.slug}
                 className="bg-white rounded-3xl overflow-hidden border border-black/5 shadow-sm flex flex-col"
               >
-                <div className="relative card-zoom">
+                <div className="relative card-zoom h-48">
                   <Image
                     src={imageUrl}
                     alt={trek.imageAlt || trek.name}
-                    width={400}
-                    height={192}
-                    className="w-full h-48 object-cover"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
                   />
                   {trek.badge && (
                     <span className="absolute bottom-3 left-3 bg-forest text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-full">
@@ -377,15 +378,15 @@ export default async function Home() {
           {galleryList.map((item) => (
             <div
               key={item.title}
-              className="relative group rounded-3xl overflow-hidden card-zoom"
+              className="relative group rounded-3xl overflow-hidden card-zoom h-60"
             >
               {item.image && (
                 <Image
                   src={item.image}
                   alt={item.alt}
-                  width={400}
-                  height={240}
-                  className="w-full h-60 object-cover"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
                 />
               )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-5 text-white">
@@ -410,13 +411,15 @@ export default async function Home() {
       {/* ABOUT US */}
       <Reveal className="max-w-[1400px] mx-auto px-6 py-16 border-t border-black/5">
         <div className="grid md:grid-cols-[1.2fr_1.8fr] gap-10 items-center">
-          <Image
-            src="/img/tt-family.webp"
-            alt={`${siteName} Group`}
-            width={600}
-            height={384}
-            className="w-full h-96 object-cover rounded-3xl shadow-md"
-          />
+          <div className="relative h-96">
+            <Image
+              src="/img/tt-family.webp"
+              alt={`${siteName} Group`}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover rounded-3xl shadow-md"
+            />
+          </div>
           <div className="space-y-6">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">
               आम्ही कोण आहोत? / Who We Are
@@ -509,14 +512,14 @@ export default async function Home() {
           {instagramPosts.map((post) => (
             <div
               key={post.image}
-              className="rounded-2xl overflow-hidden card-zoom relative group"
+              className="rounded-2xl overflow-hidden card-zoom relative group h-44"
             >
               <Image
                 src={post.image}
                 alt="Instagram post"
-                width={300}
-                height={176}
-                className="w-full h-44 object-cover"
+                fill
+                sizes="(max-width: 768px) 50vw, 16vw"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs">
                 ❤️ {post.likes}

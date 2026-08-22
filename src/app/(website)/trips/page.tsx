@@ -140,14 +140,14 @@ export default async function TripsPage({
               <Link
                 key={cat.type}
                 href={`/trips?category=${cat.type}`}
-                className="card-zoom snap-start shrink-0 w-[170px] relative rounded-2xl overflow-hidden block"
+                className="card-zoom snap-start shrink-0 w-[170px] relative rounded-2xl overflow-hidden block h-44"
               >
                 <Image
                   src={cat.image}
                   alt={cat.alt}
-                  width={170}
-                  height={176}
-                  className="w-full h-44 object-cover"
+                  fill
+                  sizes="170px"
+                  className="object-cover"
                 />
                 <span className="absolute top-2 left-2 bg-white/90 text-[9px] font-bold uppercase px-2 py-0.5 rounded-full">
                   {cat.count} {cat.count === 1 ? "Trek" : "Treks"}
@@ -174,14 +174,14 @@ export default async function TripsPage({
             return (
               <article
                 key={trek.slug}
-                className="card-zoom relative rounded-3xl overflow-hidden group"
+                className="card-zoom relative rounded-3xl overflow-hidden group h-72"
               >
                 <Image
                   src={imageUrl}
                   alt={imageAlt}
-                  width={400}
-                  height={288}
-                  className="w-full h-72 object-cover"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <span className="absolute top-4 left-4 bg-white/90 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">
