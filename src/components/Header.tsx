@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { SITE } from "@/lib/site";
 import type { SiteSetting, Navigation, Media } from "@/payload-types";
@@ -15,9 +15,21 @@ interface HeaderProps {
 export function Header({ siteSettings, navigation }: HeaderProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const isSolid = pathname === "/trips";
-  const textColor = isSolid ? "text-black" : "text-white";
-  const barColor = isSolid ? "bg-black" : "bg-white";
+  const shouldBeSolid = isSolid || scrolled;
+  const textColor = shouldBeSolid ? "text-black" : "text-white";
+  const barColor = shouldBeSolid ? "bg-black" : "bg-white";
 
   const toggle = () => setOpen((v) => !v);
   const close = () => setOpen(false);
@@ -63,15 +75,15 @@ export function Header({ siteSettings, navigation }: HeaderProps) {
   return (
     <>
       <header
-        className={`${
+        className={`transition-all duration-300 ${
           isSolid
-            ? "sticky top-0 z-40 bg-cream/90 backdrop-blur border-b border-black/5"
-            : "absolute top-0 inset-x-0 z-40"
+            ? "sticky top-0 z-50 bg-cream/90 backdrop-blur border-b border-black/5"
+            : "fixed top-0 inset-x-0 z-50 bg-transparent"
         }`}
       >
         <div
-          className={`max-w-[1400px] mx-auto flex items-center justify-between px-6 ${
-            isSolid ? "py-4" : "py-5"
+          className={`max-w-[1400px] mx-auto flex items-center justify-between px-6 transition-all duration-300 ${
+            shouldBeSolid ? "py-3" : "py-5"
           }`}
         >
           <Link href="/" className="flex items-center gap-3">
