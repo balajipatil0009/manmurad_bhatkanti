@@ -22,7 +22,16 @@ import { About } from "@/globals/About";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+// Requests carrying an Origin header (all admin POST/PATCH/DELETE) are only
+// authenticated when the origin is listed in csrf — see payload extractJWT.
+// Set NEXT_PUBLIC_SERVER_URL to the deployment URL in the hosting environment.
+const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+console.log(
+  `[payload] NEXT_PUBLIC_SERVER_URL=${process.env.NEXT_PUBLIC_SERVER_URL || "(not set)"} -> serverURL: ${serverURL}`,
+);
+
 export default buildConfig({
+  serverURL,
   admin: {
     user: "users",
     meta: {
@@ -60,6 +69,6 @@ export default buildConfig({
     push: false,
     migrationDir: path.resolve(dirname, "migrations"),
   }),
-  cors: ["http://localhost:3000"],
-  csrf: ["http://localhost:3000"],
+  cors: [serverURL],
+  csrf: [serverURL],
 });
