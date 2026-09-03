@@ -1,6 +1,7 @@
 import { buildConfig } from "payload";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import path from "path";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
@@ -32,6 +33,21 @@ console.log(
 
 export default buildConfig({
   serverURL,
+  // Uploads must live in object storage — Vercel's serverless filesystem is
+  // read-only, so the local-disk `staticDir` cannot work in production.
+  // The plugin self-disables when BLOB_READ_WRITE_TOKEN is absent (local dev
+  // without the token keeps using local disk storage).
+  plugins: [
+    vercelBlobStorage({
+      collections: {
+        // Public read access already allows anyone to fetch media, so files are
+        // served straight from the Blob CDN instead of proxied through a
+        // serverless function on every image request.
+        media: { disablePayloadAccessControl: true },
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
   admin: {
     user: "users",
     meta: {

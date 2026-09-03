@@ -19,6 +19,7 @@
     "@gsap/react": "^2.1.2",
     "@payloadcms/db-postgres": "^3.88.0",
     "@payloadcms/richtext-lexical": "^3.88.0",
+    "@payloadcms/storage-vercel-blob": "^3.88.0",
     "@remixicon/react": "^4.9.0",
     "@tailwindcss/oxide": "^4.3.3",
     "graphql": "^16.8.1",
