@@ -4796,21 +4796,21 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'+919373398091'"
+          "default": "'+919112784198'"
         },
         "phone_display": {
           "name": "phone_display",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'+91 93733 98091'"
+          "default": "'+91 91127 84198'"
         },
         "whatsapp_number": {
           "name": "whatsapp_number",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'919373398091'"
+          "default": "'919112784198'"
         },
         "instagram": {
           "name": "instagram",

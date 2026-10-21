@@ -150,7 +150,7 @@ export default async function TrekDetailPage({ params }: Props) {
 
   const sitePhone = siteSettings?.phone || SITE.phone;
   const sitePhoneDisplay = siteSettings?.phoneDisplay || SITE.phoneDisplay;
-  const siteWhatsapp = siteSettings?.whatsappNumber || "919373398091";
+  const siteWhatsapp = siteSettings?.whatsappNumber || "919112784198";
 
   const bookingUrl = `https://wa.me/${siteWhatsapp}?text=${encodeURIComponent(
     `Hello Manmurad Bhatkanti! I want to book slots for the ${trek.name} on ${trek.date || "upcoming scheduled dates"}.`

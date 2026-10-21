@@ -74,8 +74,3 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
-
-/* Prevent smooth scrolling conflict with GSAP ScrollTrigger */
-html.gsap-active {
-  scroll-behavior: auto !important;
-}

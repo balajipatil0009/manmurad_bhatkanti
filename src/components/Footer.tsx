@@ -18,7 +18,7 @@ export function Footer({ siteSettings, navigation }: FooterProps) {
   const phone = siteSettings?.phone || SITE.phone;
   const phoneDisplay = siteSettings?.phoneDisplay || SITE.phoneDisplay;
   const instagram = siteSettings?.instagram || SITE.instagram;
-  const whatsappNumber = siteSettings?.whatsappNumber || "919373398091";
+  const whatsappNumber = siteSettings?.whatsappNumber || "919112784198";
 
   const designerName = siteSettings?.designerName || SITE.designer.name;
   const designerInstagram = siteSettings?.designerInstagram || SITE.designer.instagram;

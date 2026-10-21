@@ -18,47 +18,53 @@ export function Header({ siteSettings, navigation }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isSolid = pathname === "/trips";
-  const shouldBeSolid = isSolid || scrolled;
-  const textColor = shouldBeSolid ? "text-black" : "text-white";
-  const barColor = shouldBeSolid ? "bg-black" : "bg-white";
+  const isHome = pathname === "/";
+  const headerClass = isHome
+    ? `fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+        scrolled ? "bg-forest backdrop-blur border-b border-black/5" : "bg-transparent"
+      }`
+    : "sticky top-0 z-50 bg-forest backdrop-blur border-b border-black/5";
 
   const toggle = () => setOpen((v) => !v);
   const close = () => setOpen(false);
 
-  const navLinks = navigation?.quickLinks || [
-    { label: "Home", href: "/" },
-    { label: "About Us", href: "/#about" },
-    { label: "Upcoming Treks", href: "/#upcoming" },
-    { label: "Completed Trips", href: "/#completed" },
-    { label: "Gallery", href: "/#gallery" },
-    { label: "Contact Us", href: "/#contact" },
-  ];
+  const navLinks = navigation?.quickLinks?.length
+    ? navigation.quickLinks
+    : [
+        { label: "Home", href: "/" },
+        { label: "About Us", href: "/#about" },
+        { label: "Upcoming Treks", href: "/#upcoming" },
+        { label: "Completed Trips", href: "/#completed" },
+        { label: "Gallery", href: "/#gallery" },
+        { label: "Contact Us", href: "/#contact" },
+      ];
 
-  const trekLinks = navigation?.trekLinks || [
-    { label: "One Day Treks", href: "/trips" },
-    { label: "Night Treks", href: "/trips" },
-    { label: "Backpacking Tours", href: "/trips" },
-    { label: "Waterfall Expeditions", href: "/trips" },
-  ];
+  const trekLinks = navigation?.trekLinks?.length
+    ? navigation.trekLinks
+    : [
+        { label: "One Day Treks", href: "/trips?category=one-day" },
+        { label: "Night Treks", href: "/trips?category=night-trek" },
+        { label: "Backpacking Tours", href: "/trips?category=backpacking" },
+        { label: "Waterfall Expeditions", href: "/trips?category=waterfall" },
+      ];
 
   const siteInstagram = siteSettings?.instagram || SITE.instagram;
   const sitePhone = siteSettings?.phone || SITE.phone;
-  const siteWhatsapp = siteSettings?.whatsappNumber || "919373398091";
+  const siteWhatsapp = siteSettings?.whatsappNumber || "919112784198";
 
-  const connectLinks = navigation?.connectLinks || [
-    { label: "Instagram", href: siteInstagram },
-    { label: "WhatsApp Chat", href: `https://wa.me/${siteWhatsapp}` },
-    { label: "Call Team", href: `tel:${sitePhone}` },
-  ];
+  const connectLinks = navigation?.connectLinks?.length
+    ? navigation.connectLinks
+    : [
+        { label: "Instagram", href: siteInstagram },
+        { label: "WhatsApp Chat", href: `https://wa.me/${siteWhatsapp}` },
+        { label: "Call Team", href: `tel:${sitePhone}` },
+      ];
 
   const logoUrl =
     siteSettings?.logo && typeof siteSettings.logo === "object"
@@ -74,36 +80,33 @@ export function Header({ siteSettings, navigation }: HeaderProps) {
 
   return (
     <>
-      <header
-        className={`transition-all duration-300 ${
-          isSolid
-            ? "sticky top-0 z-50 bg-cream/90 backdrop-blur border-b border-black/5"
-            : "fixed top-0 inset-x-0 z-50 bg-transparent"
-        }`}
-      >
-        <div
-          className={`max-w-[1400px] mx-auto flex items-center justify-between px-6 transition-all duration-300 ${
-            shouldBeSolid ? "py-3" : "py-5"
-          }`}
-        >
+      <header className={headerClass}>
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 h-16">
           <Link href="/" className="flex items-center gap-3">
             <Image
               src={logoUrl}
               alt={`${siteName} Logo`}
               width={100}
               height={100}
-              className={`h-10 w-auto object-contain ${
-                isSolid ? "" : "h-12"
-              }`}
+              className="h-10 w-auto object-contain"
             />
-            <span
-              className={`font-extrabold uppercase leading-none text-xs sm:text-sm tracking-wide ${textColor}`}
-            >
+            <span className="font-extrabold uppercase leading-none text-xs sm:text-sm tracking-wide text-white">
               {siteNameLine1}
               <br />
               {siteNameLine2}
             </span>
           </Link>
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-[11px] font-bold uppercase tracking-widest text-white/85 hover:text-primary transition"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
           <div className="flex items-center gap-4">
             <a
               href={whatsappBookUrl}
@@ -117,10 +120,10 @@ export function Header({ siteSettings, navigation }: HeaderProps) {
               type="button"
               onClick={toggle}
               aria-label="Toggle Menu"
-              className={`${textColor} flex flex-col gap-1.5 p-1`}
+              className="lg:hidden text-white flex flex-col gap-1.5 p-1"
             >
-              <span className={`block w-7 h-0.5 ${barColor}`} />
-              <span className={`block w-7 h-0.5 ${barColor}`} />
+              <span className="block w-7 h-0.5 bg-white" />
+              <span className="block w-7 h-0.5 bg-white" />
             </button>
           </div>
         </div>

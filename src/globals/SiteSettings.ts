@@ -37,18 +37,18 @@ export const SiteSettings: GlobalConfig = {
     {
       name: "phone",
       type: "text",
-      defaultValue: "+919373398091",
+      defaultValue: "+919112784198",
     },
     {
       name: "phoneDisplay",
       type: "text",
       label: "Phone (Display)",
-      defaultValue: "+91 93733 98091",
+      defaultValue: "+91 91127 84198",
     },
     {
       name: "whatsappNumber",
       type: "text",
-      defaultValue: "919373398091",
+      defaultValue: "919112784198",
     },
     {
       name: "instagram",
