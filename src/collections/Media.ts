@@ -1,9 +1,38 @@
 import type { CollectionConfig } from "payload";
+import { revalidatePath } from "next/cache";
 
 export const Media: CollectionConfig = {
   slug: "media",
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, context }) => {
+        if (context?.skipRevalidate) return doc;
+
+        try {
+          revalidatePath("/", "layout");
+        } catch (error) {
+          console.warn("revalidatePath failed (likely running outside Next.js):", error);
+        }
+
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc, context }) => {
+        if (context?.skipRevalidate) return doc;
+
+        try {
+          revalidatePath("/", "layout");
+        } catch (error) {
+          console.warn("revalidatePath failed (likely running outside Next.js):", error);
+        }
+
+        return doc;
+      },
+    ],
   },
   upload: {
     staticDir: "media",

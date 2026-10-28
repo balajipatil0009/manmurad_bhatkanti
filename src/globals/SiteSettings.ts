@@ -1,10 +1,26 @@
 import type { GlobalConfig } from "payload";
+import { revalidatePath } from "next/cache";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   label: "Site Settings",
   admin: {
     group: "Settings",
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, context }) => {
+        if (context?.skipRevalidate) return doc;
+
+        try {
+          revalidatePath("/", "layout");
+        } catch (error) {
+          console.warn("revalidatePath failed (likely running outside Next.js):", error);
+        }
+
+        return doc;
+      },
+    ],
   },
   fields: [
     {

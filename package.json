@@ -13,7 +13,7 @@
     "migrate:create": "payload migrate:create",
     "migrate": "payload migrate",
     "migrate:status": "payload migrate:status",
-    "seed": "tsx seed.ts"
+    "seed": "tsx --env-file=.env seed.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.88.0",

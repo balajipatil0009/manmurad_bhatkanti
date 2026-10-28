@@ -190,6 +190,8 @@ export default async function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <video
           src={heroVideoUrl}
+          poster="/images/hero-poster.jpg"
+          preload="metadata"
           autoPlay
           loop
           muted
