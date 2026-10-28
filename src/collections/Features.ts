@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateSite } from "@/lib/revalidate";
 
 export const Features: CollectionConfig = {
   slug: "features",
@@ -13,6 +14,20 @@ export const Features: CollectionConfig = {
   },
   versions: {
     drafts: true,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
+        return doc;
+      },
+    ],
   },
   fields: [
     {

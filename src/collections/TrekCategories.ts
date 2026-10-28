@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { slugField } from "payload";
+import { revalidateSite } from "@/lib/revalidate";
 
 export const TrekCategories: CollectionConfig = {
   slug: "trek-categories",
@@ -14,6 +15,20 @@ export const TrekCategories: CollectionConfig = {
   },
   versions: {
     drafts: true,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
+        return doc;
+      },
+    ],
   },
   fields: [
     {

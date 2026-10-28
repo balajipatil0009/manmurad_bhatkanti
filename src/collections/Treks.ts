@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 import { slugField } from "payload";
 import { revalidatePath } from "next/cache";
 import { seoField } from "@/fields/seo";
+import { revalidateSite } from "@/lib/revalidate";
 
 export const Treks: CollectionConfig = {
   slug: "treks",
@@ -34,6 +35,12 @@ export const Treks: CollectionConfig = {
           console.warn("revalidatePath failed (likely running outside Next.js):", error);
         }
 
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
         return doc;
       },
     ],

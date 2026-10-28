@@ -1,4 +1,5 @@
 import type { ArrayField, GlobalConfig } from "payload";
+import { revalidateSite } from "@/lib/revalidate";
 
 const linkGroup = (name: string, label: string): ArrayField => ({
   name,
@@ -15,6 +16,14 @@ export const Navigation: GlobalConfig = {
   label: "Navigation",
   admin: {
     group: "Settings",
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, context }) => {
+        revalidateSite(context);
+        return doc;
+      },
+    ],
   },
   fields: [
     linkGroup("quickLinks", "Quick Links"),
