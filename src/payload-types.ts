@@ -774,6 +774,9 @@ export interface SiteSetting {
   siteNameMr?: string | null;
   tagline?: string | null;
   logo?: (number | null) | Media;
+  /**
+   * Upload a video or an image. Videos autoplay muted and loop; images are shown full-bleed.
+   */
   heroVideo?: (number | null) | Media;
   phone?: string | null;
   phoneDisplay?: string | null;

@@ -133,10 +133,12 @@ export default async function Home() {
   const whatsappNumber = siteSettings?.whatsappNumber || "919112784198";
   const instagramUrl = siteSettings?.instagram || SITE.instagram;
 
-  const heroVideoUrl =
+  const heroMedia =
     siteSettings?.heroVideo && typeof siteSettings.heroVideo === "object"
-      ? (siteSettings.heroVideo as Media).url || SITE.heroVideo
-      : SITE.heroVideo;
+      ? (siteSettings.heroVideo as Media)
+      : null;
+  const heroMediaUrl = heroMedia?.url || SITE.heroVideo;
+  const heroIsImage = heroMedia?.mimeType?.startsWith("image/") ?? false;
 
   const logoUrl =
     siteSettings?.logo && typeof siteSettings.logo === "object"
@@ -188,16 +190,27 @@ export default async function Home() {
     <>
       {/* HERO */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <video
-          src={heroVideoUrl}
-          poster="/images/hero-poster.jpg"
-          preload="metadata"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="hero-img absolute inset-0 w-full h-full object-cover"
-        />
+        {heroIsImage ? (
+          <Image
+            src={heroMediaUrl}
+            alt={heroMedia?.alt || `${siteName} hero`}
+            fill
+            priority
+            sizes="100vw"
+            className="hero-img object-cover"
+          />
+        ) : (
+          <video
+            src={heroMediaUrl}
+            poster="/images/hero-poster.jpg"
+            preload="metadata"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="hero-img absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-black/45 z-10" />
         <div className="relative z-20 text-center text-white px-6 w-full max-w-4xl flex flex-col items-center justify-center space-y-4">
           <Image

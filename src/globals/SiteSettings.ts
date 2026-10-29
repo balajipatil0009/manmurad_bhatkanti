@@ -42,6 +42,11 @@ export const SiteSettings: GlobalConfig = {
       name: "heroVideo",
       type: "upload",
       relationTo: "media",
+      label: "Hero Media (video or image)",
+      admin: {
+        description:
+          "Upload a video or an image. Videos autoplay muted and loop; images are shown full-bleed.",
+      },
     },
     {
       name: "phone",

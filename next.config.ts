@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mizixxohtlsd8nrw.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
+    ],
+  },
+};
 
 export default withPayload(nextConfig);
