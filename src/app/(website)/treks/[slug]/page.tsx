@@ -14,9 +14,9 @@ type Props = {
 function getTrekImage(trek: any): string {
   if (typeof trek.image === "string") return trek.image;
   if (trek.image && typeof trek.image === "object") {
-    return (trek.image as Media).url || "/placeholder.jpg";
+    return (trek.image as Media).url || "/img/hero.webp";
   }
-  return "/placeholder.jpg";
+  return "/img/hero.webp";
 }
 
 function getTrekImageAlt(trek: any): string {

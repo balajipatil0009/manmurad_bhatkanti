@@ -21,6 +21,7 @@ import type {
   TrekCategory,
 } from "@/payload-types";
 import { RichText } from "@/components/RichText";
+import { getMediaAlt, getMediaUrl } from "@/lib/media";
 import { RiChat1Line, RiPhoneLine } from "@remixicon/react";
 
 const defaultGallery = [
@@ -109,9 +110,9 @@ function getCategoryLabel(trek: any): string {
 function getTrekImage(trek: any): string {
   if (typeof trek.image === "string") return trek.image;
   if (trek.image && typeof trek.image === "object") {
-    return (trek.image as Media).url || "/placeholder.jpg";
+    return (trek.image as Media).url || "/img/hero.webp";
   }
-  return "/placeholder.jpg";
+  return "/img/hero.webp";
 }
 
 function FeatureIcon({ iconStr }: { iconStr: string }) {
@@ -195,38 +196,30 @@ export default async function Home() {
   const featuresList = dbFeatures && dbFeatures.length > 0 ? dbFeatures : defaultFeatures;
 
   // Dynamic Gallery
-  const galleryList =
-    dbGallery && dbGallery.length > 0
-      ? dbGallery.map((item) => ({
-        image: typeof item.image === "object" ? (item.image as Media).url || "" : "",
-        alt: item.alt || item.title || "",
-        title: item.title,
-        date: item.date || "",
-      }))
-      : defaultGallery;
+  const dbGalleryList = (dbGallery ?? [])
+    .map((item) => ({
+      image: getMediaUrl(item.image),
+      alt: item.alt || item.title || "",
+      title: item.title,
+      date: item.date || "",
+    }))
+    .filter((item) => item.image);
+
+  const galleryList = dbGalleryList.length > 0 ? dbGalleryList : defaultGallery;
 
   const instagramFeed =
     homeSettings?.instagramFeed && homeSettings.instagramFeed.length > 0
       ? homeSettings.instagramFeed
         .map((item) => ({
-          image: typeof item.image === "object" ? item.image.url || "" : "",
-          alt:
-            typeof item.image === "object"
-              ? item.image.alt || "Instagram post"
-              : "Instagram post",
+          image: getMediaUrl(item.image),
+          alt: getMediaAlt(item.image, "Instagram post"),
           likes: item.likes || "",
         }))
         .filter((post) => post.image)
       : defaultInstagramPosts.map((post) => ({ ...post, alt: "Instagram post" }));
 
-  const aboutImage =
-    aboutSettings?.image && typeof aboutSettings.image === "object"
-      ? (aboutSettings.image as Media).url || "/img/tt-family.webp"
-      : "/img/tt-family.webp";
-  const aboutImageAlt =
-    aboutSettings?.image && typeof aboutSettings.image === "object"
-      ? (aboutSettings.image as Media).alt || `${siteName} Group`
-      : `${siteName} Group`;
+  const aboutImage = getMediaUrl(aboutSettings?.image, "/img/tt-family.webp");
+  const aboutImageAlt = getMediaAlt(aboutSettings?.image, `${siteName} Group`);
 
   return (
     <>
