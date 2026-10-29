@@ -99,10 +99,17 @@ export default async function TripsPage({
           type: cat.slug,
           label: cat.name,
           count: counts[cat.slug] || 0,
-          image: categoryImages[cat.slug] || "/img/tt-trekking.webp",
-          alt: cat.name,
+          image:
+            cat.image && typeof cat.image === "object"
+              ? (cat.image as Media).url || categoryImages[cat.slug] || "/img/tt-trekking.webp"
+              : categoryImages[cat.slug] || "/img/tt-trekking.webp",
+          alt:
+            cat.image && typeof cat.image === "object"
+              ? (cat.image as Media).alt || cat.name
+              : cat.name,
+          description: cat.description || "",
         }))
-      : defaultCategories;
+      : defaultCategories.map((cat) => ({ ...cat, description: "" }));
 
   // Filter and sort treks
   let visible: any[] = allTreks && allTreks.length > 0 ? [...allTreks] : [...fallbackTreks];
@@ -140,6 +147,7 @@ export default async function TripsPage({
               <Link
                 key={cat.type}
                 href={`/trips?category=${cat.type}`}
+                title={cat.description || cat.label}
                 className="card-zoom snap-start shrink-0 w-[170px] relative rounded-2xl overflow-hidden block h-44"
               >
                 <Image

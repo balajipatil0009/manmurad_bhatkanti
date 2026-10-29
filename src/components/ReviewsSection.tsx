@@ -28,12 +28,30 @@ interface ReviewsSectionProps {
   reviews?: Testimonial[] | null;
 }
 
+type Review = {
+  quote: string;
+  name: string;
+  role?: string | null;
+  rating?: number | null;
+};
+
 export function ReviewsSection({ reviews }: ReviewsSectionProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
-  const activeReviews = reviews && reviews.length > 0 ? reviews : defaultReviews;
+  const activeReviews: Review[] =
+    reviews && reviews.length > 0 ? reviews : defaultReviews;
+
+  const ratingOf = (review: Review) => {
+    const value = review.rating || 5;
+    return Math.min(5, Math.max(1, Math.round(value)));
+  };
+  const averageRating =
+    activeReviews.reduce((sum, review) => sum + ratingOf(review), 0) /
+    activeReviews.length;
+  const averageStars =
+    "★".repeat(Math.round(averageRating)) + "☆".repeat(5 - Math.round(averageRating));
 
   useEffect(() => {
     const track = trackRef.current;
@@ -74,30 +92,37 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
         ref={trackRef}
         className="flex gap-5 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory"
       >
-        {activeReviews.map((review) => (
-          <figure
-            key={review.name}
-            className="snap-start shrink-0 w-[300px] bg-white border border-black/5 p-6 rounded-3xl flex flex-col justify-between h-64 shadow-sm"
-          >
-            <p className="text-sm text-neutral-600 italic">
-              &ldquo;{review.quote}&rdquo;
-            </p>
-            <div className="border-t border-black/5 pt-3">
-              <span className="text-yellow-400 text-xs tracking-widest block">
-                ★★★★★
-              </span>
-              <p className="text-xs font-bold text-forest">{review.name}</p>
-              <p className="text-[10px] text-neutral-400">{review.role}</p>
-            </div>
-          </figure>
-        ))}
+        {activeReviews.map((review) => {
+          const rating = ratingOf(review);
+          const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+
+          return (
+            <figure
+              key={review.name}
+              className="snap-start shrink-0 w-[300px] bg-white border border-black/5 p-6 rounded-3xl flex flex-col justify-between h-64 shadow-sm"
+            >
+              <p className="text-sm text-neutral-600 italic">
+                &ldquo;{review.quote}&rdquo;
+              </p>
+              <div className="border-t border-black/5 pt-3">
+                <span className="text-yellow-400 text-xs tracking-widest block">
+                  {stars}
+                </span>
+                <p className="text-xs font-bold text-forest">{review.name}</p>
+                <p className="text-[10px] text-neutral-400">{review.role}</p>
+              </div>
+            </figure>
+          );
+        })}
       </div>
       <div>
         <div className="flex items-center gap-3 mb-6">
           <span className="text-yellow-400 text-2xl tracking-widest">
-            ★★★★★
+            {averageStars}
           </span>
-          <span className="text-3xl font-extrabold text-forest">5.0 / 5</span>
+          <span className="text-3xl font-extrabold text-forest">
+            {averageRating.toFixed(1)} / 5
+          </span>
         </div>
         <blockquote className="text-neutral-700 text-base md:text-lg leading-relaxed line-clamp-4">
           &ldquo;आमची मनमुराद भटकंटी सोबत पहिलीच ट्रिप होती, आणि तो अनुभव

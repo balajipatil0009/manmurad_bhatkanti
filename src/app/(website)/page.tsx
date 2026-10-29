@@ -13,7 +13,14 @@ import {
   getGalleryItems,
   getGlobal,
 } from "@/lib/queries";
-import type { Media, TrekCategory, SiteSetting } from "@/payload-types";
+import type {
+  About as AboutSettings,
+  Home as HomeSettings,
+  Media,
+  SiteSetting,
+  TrekCategory,
+} from "@/payload-types";
+import { RichText } from "@/components/RichText";
 import { RiChat1Line, RiPhoneLine } from "@remixicon/react";
 
 const defaultGallery = [
@@ -82,7 +89,7 @@ const defaultFeatures = [
   },
 ];
 
-const instagramPosts = [
+const defaultInstagramPosts = [
   { image: "/img/tt-biking.webp", likes: "1.2k" },
   { image: "/img/tt-birding.webp", likes: "980" },
   { image: "/img/tt-community.jpg", likes: "2.4k" },
@@ -123,6 +130,8 @@ export default async function Home() {
   const dbTestimonials = await getTestimonials();
   const dbGallery = await getGalleryItems();
   const siteSettings = (await getGlobal("site-settings")) as SiteSetting;
+  const homeSettings = (await getGlobal("home")) as HomeSettings;
+  const aboutSettings = (await getGlobal("about")) as AboutSettings;
 
   // Determine site settings dynamically
   const siteName = siteSettings?.siteName || SITE.name;
@@ -132,6 +141,19 @@ export default async function Home() {
   const phoneDisplay = siteSettings?.phoneDisplay || SITE.phoneDisplay;
   const whatsappNumber = siteSettings?.whatsappNumber || "919112784198";
   const instagramUrl = siteSettings?.instagram || SITE.instagram;
+  const instagramHandle = siteSettings?.instagramHandle || SITE.instagramHandle;
+
+  const whatsappEnquireUrl = `https://wa.me/${whatsappNumber}?text=Hello%20Manmurad%20Bhatkanti!%20I%20want%20to%20enquire%20about%20your%20upcoming%20trekking%20events.`;
+  const whatsappContactUrl = `https://wa.me/${whatsappNumber}?text=Hello%20Manmurad%20Bhatkanti,%20I'm%20planning%20a%20trek.%20Please%20send%20schedule.`;
+
+  const heroHeading = homeSettings?.heroHeading || siteNameMr;
+  const heroSubtitle =
+    homeSettings?.heroSubtitle ||
+    "तुमच्या स्वप्नातील भटकंटी, सह्याद्रीच्या कुशीत! We curate safe, affordable, and incredibly memorable trekking, camping, and backpacking experiences across Maharashtra. Let's do something extraordinary.";
+  const heroCtaPrimary = homeSettings?.heroCtaPrimary || "Explore Treks";
+  const heroCtaPrimaryHref = homeSettings?.heroCtaPrimaryHref || "#upcoming";
+  const heroCtaSecondary = homeSettings?.heroCtaSecondary || "Book Now";
+  const heroCtaSecondaryHref = homeSettings?.heroCtaSecondaryHref || whatsappEnquireUrl;
 
   const heroMedia =
     siteSettings?.heroVideo && typeof siteSettings.heroVideo === "object"
@@ -183,8 +205,28 @@ export default async function Home() {
       }))
       : defaultGallery;
 
-  const whatsappEnquireUrl = `https://wa.me/${whatsappNumber}?text=Hello%20Manmurad%20Bhatkanti!%20I%20want%20to%20enquire%20about%20your%20upcoming%20trekking%20events.`;
-  const whatsappContactUrl = `https://wa.me/${whatsappNumber}?text=Hello%20Manmurad%20Bhatkanti,%20I'm%20planning%20a%20trek.%20Please%20send%20schedule.`;
+  const instagramFeed =
+    homeSettings?.instagramFeed && homeSettings.instagramFeed.length > 0
+      ? homeSettings.instagramFeed
+        .map((item) => ({
+          image: typeof item.image === "object" ? item.image.url || "" : "",
+          alt:
+            typeof item.image === "object"
+              ? item.image.alt || "Instagram post"
+              : "Instagram post",
+          likes: item.likes || "",
+        }))
+        .filter((post) => post.image)
+      : defaultInstagramPosts.map((post) => ({ ...post, alt: "Instagram post" }));
+
+  const aboutImage =
+    aboutSettings?.image && typeof aboutSettings.image === "object"
+      ? (aboutSettings.image as Media).url || "/img/tt-family.webp"
+      : "/img/tt-family.webp";
+  const aboutImageAlt =
+    aboutSettings?.image && typeof aboutSettings.image === "object"
+      ? (aboutSettings.image as Media).alt || `${siteName} Group`
+      : `${siteName} Group`;
 
   return (
     <>
@@ -225,28 +267,25 @@ export default async function Home() {
             {tagline}
           </p>
           <h1 className="text-4xl sm:text-6xl font-extrabold uppercase tracking-tight">
-            {siteNameMr}
+            {heroHeading}
           </h1>
           <p className="max-w-2xl text-xs sm:text-sm text-white/80 leading-relaxed font-light">
-            तुमच्या स्वप्नातील भटकंटी, सह्याद्रीच्या कुशीत! We curate safe,
-            affordable, and incredibly memorable trekking, camping, and
-            backpacking experiences across Maharashtra. Let&apos;s do something
-            extraordinary.
+            {heroSubtitle}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
             <a
-              href="#upcoming"
+              href={heroCtaPrimaryHref}
               className="bg-primary text-white text-xs font-bold uppercase tracking-wider px-8 py-3.5 rounded-full hover:bg-primary-dark transition shadow-lg"
             >
-              Explore Treks
+              {heroCtaPrimary}
             </a>
             <a
-              href={whatsappEnquireUrl}
+              href={heroCtaSecondaryHref}
               target="_blank"
               rel="noopener noreferrer"
               className="border border-white text-white text-xs font-bold uppercase tracking-wider px-8 py-3.5 rounded-full hover:bg-white hover:text-black transition"
             >
-              Book Now
+              {heroCtaSecondary}
             </a>
           </div>
         </div>
@@ -258,8 +297,8 @@ export default async function Home() {
         className="max-w-[1400px] mx-auto px-6 pt-16 pb-8 scroll-mt-20"
       >
         <Carousel
-          eyebrow="Book Your Next Adventure"
-          title="Upcoming Treks & Trips"
+          eyebrow={homeSettings?.upcomingEyebrow || "Book Your Next Adventure"}
+          title={homeSettings?.upcomingTitle || "Upcoming Treks & Trips"}
         >
           {displayUpcoming.map((trek) => {
             const formattedPrice = trek.price.toLocaleString("en-IN");
@@ -324,10 +363,10 @@ export default async function Home() {
       <Reveal className="max-w-[1400px] mx-auto px-6 py-16">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-moss mb-3">
-            Treks Directly on Your Screen
+            {homeSettings?.popularEyebrow || "Treks Directly on Your Screen"}
           </p>
           <h2 className="text-3xl md:text-5xl font-extrabold uppercase text-forest">
-            Popular Treks
+            {homeSettings?.popularTitle || "Popular Treks"}
           </h2>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -390,10 +429,10 @@ export default async function Home() {
       >
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-moss mb-3">
-            Our Proud Memories
+            {homeSettings?.galleryEyebrow || "Our Proud Memories"}
           </p>
           <h2 className="text-3xl md:text-5xl font-extrabold uppercase text-forest">
-            Completed Trips &amp; Gallery
+            {homeSettings?.galleryTitle || "Completed Trips & Gallery"}
           </h2>
         </div>
         <div
@@ -441,8 +480,8 @@ export default async function Home() {
         <div className="grid md:grid-cols-[1.2fr_1.8fr] gap-10 items-center">
           <div className="relative h-96">
             <Image
-              src="/img/tt-family.webp"
-              alt={`${siteName} Group`}
+              src={aboutImage}
+              alt={aboutImageAlt}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover rounded-3xl shadow-md"
@@ -450,32 +489,39 @@ export default async function Home() {
           </div>
           <div className="space-y-6">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">
-              आम्ही कोण आहोत? / Who We Are
+              {aboutSettings?.eyebrow || "आम्ही कोण आहोत? / Who We Are"}
             </p>
             <h2 className="text-3xl md:text-5xl font-extrabold uppercase text-forest">
-              सह्याद्रीचे सोबती — {siteNameMr}
+              {aboutSettings?.heading || `सह्याद्रीचे सोबती — ${siteNameMr}`}
             </h2>
-            <div className="space-y-4 text-sm text-neutral-600 leading-relaxed font-light">
-              <p>
-                <strong>{siteNameMr} ({siteName})</strong> ही
-                महाराष्ट्रातील एक अग्रगण्य आणि साहसी ट्रेकिंग संस्था आहे.
-                डोंगरभटकंती आणि दुर्गभ्रमंतीची आवड असणाऱ्या प्रत्येकाला एकत्र
-                आणून, सह्याद्रीचे वैभव अनुभवण्याची संधी देणे ही आमची सुरुवात होती.
-              </p>
-              <p>
-                आमचा प्रवास केवळ पर्यटन नाही, तर दुर्ग संवर्धन, इतिहास प्रसार
-                आणि प्रत्येकाच्या मनात सुरक्षित साहसाची भावना रुजवणे हे आमचे
-                उद्दिष्ट आहे. We strive to provide well-planned, budget-friendly
-                and highly memorable experiences, led by certified leaders who
-                value your safety above everything else.
-              </p>
-            </div>
+            {aboutSettings?.body ? (
+              <RichText
+                content={aboutSettings.body}
+                className="space-y-4 text-sm text-neutral-600 leading-relaxed font-light"
+              />
+            ) : (
+              <div className="space-y-4 text-sm text-neutral-600 leading-relaxed font-light">
+                <p>
+                  <strong>{siteNameMr} ({siteName})</strong> ही
+                  महाराष्ट्रातील एक अग्रगण्य आणि साहसी ट्रेकिंग संस्था आहे.
+                  डोंगरभटकंती आणि दुर्गभ्रमंतीची आवड असणाऱ्या प्रत्येकाला एकत्र
+                  आणून, सह्याद्रीचे वैभव अनुभवण्याची संधी देणे ही आमची सुरुवात होती.
+                </p>
+                <p>
+                  आमचा प्रवास केवळ पर्यटन नाही, तर दुर्ग संवर्धन, इतिहास प्रसार
+                  आणि प्रत्येकाच्या मनात सुरक्षित साहसाची भावना रुजवणे हे आमचे
+                  उद्दिष्ट आहे. We strive to provide well-planned, budget-friendly
+                  and highly memorable experiences, led by certified leaders who
+                  value your safety above everything else.
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-4 pt-2">
               <a
-                href="#contact"
+                href={aboutSettings?.ctaHref || "#contact"}
                 className="bg-forest text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-full hover:bg-primary transition"
               >
-                Know More
+                {aboutSettings?.ctaLabel || "Know More"}
               </a>
               <a
                 href={`tel:${phone}`}
@@ -537,21 +583,23 @@ export default async function Home() {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-          {instagramPosts.map((post) => (
+          {instagramFeed.map((post) => (
             <div
               key={post.image}
               className="rounded-2xl overflow-hidden card-zoom relative group h-44"
             >
               <Image
                 src={post.image}
-                alt="Instagram post"
+                alt={post.alt}
                 fill
                 sizes="(max-width: 768px) 50vw, 16vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs">
-                ❤️ {post.likes}
-              </div>
+              {post.likes && (
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs">
+                  ❤️ {post.likes}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -562,7 +610,7 @@ export default async function Home() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white text-xs font-bold uppercase tracking-widest px-8 py-3.5 rounded-full hover:opacity-90 transition shadow"
           >
-            Follow Us on Instagram
+            Follow {instagramHandle}
           </a>
         </div>
       </Reveal>

@@ -89,3 +89,26 @@ export async function getGlobal(slug: "site-settings" | "navigation" | "home" | 
   const payload = await getPayloadCached();
   return payload.findGlobal({ slug });
 }
+
+export async function getPageBySlug(slug: string) {
+  const payload = await getPayloadCached();
+  const { docs } = await payload.find({
+    collection: "pages",
+    where: { ...published, slug: { equals: slug } },
+    depth: 1,
+    limit: 1,
+  });
+  return docs[0] ?? null;
+}
+
+export async function getPageSlugs() {
+  const payload = await getPayloadCached();
+  const { docs } = await payload.find({
+    collection: "pages",
+    where: published,
+    depth: 0,
+    limit: 500,
+    select: { slug: true },
+  });
+  return docs.map((doc) => ({ slug: doc.slug as string }));
+}

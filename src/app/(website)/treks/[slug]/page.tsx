@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { treks as fallbackTreks } from "@/lib/treks";
 import { SITE } from "@/lib/site";
 import { getTrekBySlug, getTrekSlugs, getGlobal } from "@/lib/queries";
-import type { Media, TrekCategory, SiteSetting } from "@/payload-types";
+import type { Media, TrekCategory, SiteSetting, Trek } from "@/payload-types";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -119,17 +119,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const imageUrl = getTrekImage(trek);
   const imageAlt = getTrekImageAlt(trek);
+  const seo = trek.seo as Trek["seo"];
+  const ogImage =
+    seo?.ogImage && typeof seo.ogImage === "object" ? seo.ogImage.url || undefined : undefined;
 
   return {
-    title: `${trek.name} Trek Details`,
-    description: trek.shortDescription,
+    title: seo?.metaTitle || `${trek.name} Trek Details`,
+    description: seo?.metaDescription || trek.shortDescription,
     alternates: {
-      canonical: `/treks/${trek.slug}`,
+      canonical: seo?.canonical || `/treks/${trek.slug}`,
     },
     openGraph: {
       title: `${trek.name} | ${SITE.name}`,
-      description: trek.shortDescription,
-      images: [{ url: imageUrl, alt: imageAlt }],
+      description: seo?.metaDescription || trek.shortDescription,
+      images: [{ url: ogImage || imageUrl, alt: imageAlt }],
     },
   };
 }
