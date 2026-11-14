@@ -140,6 +140,8 @@ export default async function Home() {
   const tagline = siteSettings?.tagline || SITE.tagline;
   const phone = siteSettings?.phone || SITE.phone;
   const phoneDisplay = siteSettings?.phoneDisplay || SITE.phoneDisplay;
+  const phone2 = siteSettings?.phone2;
+  const phone2Display = siteSettings?.phone2Display || phone2;
   const whatsappNumber = siteSettings?.whatsappNumber || "919112784198";
   const instagramUrl = siteSettings?.instagram || SITE.instagram;
   const instagramHandle = siteSettings?.instagramHandle || SITE.instagramHandle;
@@ -630,7 +632,7 @@ export default async function Home() {
             <span className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center text-3xl text-primary">
               <RiPhoneLine />
             </span>
-            <div>
+            <div className="space-y-1">
               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mb-1">
                 Call Trek Coordinator
               </p>
@@ -640,6 +642,14 @@ export default async function Home() {
               >
                 {phoneDisplay}
               </a>
+              {phone2 && (
+                <a
+                  href={`tel:${phone2}`}
+                  className="block text-sm font-bold text-forest hover:underline hover:text-primary transition"
+                >
+                  {phone2Display}
+                </a>
+              )}
             </div>
           </div>
           <div className="bg-white p-8 rounded-3xl border border-black/5 shadow-sm space-y-4 text-center flex flex-col items-center">

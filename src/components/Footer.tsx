@@ -17,6 +17,8 @@ export function Footer({ siteSettings, navigation }: FooterProps) {
   const tagline = siteSettings?.footerTagline || SITE.description;
   const phone = siteSettings?.phone || SITE.phone;
   const phoneDisplay = siteSettings?.phoneDisplay || SITE.phoneDisplay;
+  const phone2 = siteSettings?.phone2;
+  const phone2Display = siteSettings?.phone2Display || phone2;
   const instagram = siteSettings?.instagram || SITE.instagram;
   const whatsappNumber = siteSettings?.whatsappNumber || "919112784198";
 
@@ -86,6 +88,13 @@ export function Footer({ siteSettings, navigation }: FooterProps) {
                   {phoneDisplay}
                 </a>
               </li>
+              {phone2 && (
+                <li>
+                  <a href={`tel:${phone2}`} className="hover:text-white">
+                    {phone2Display}
+                  </a>
+                </li>
+              )}
               <li>
                 <a
                   href={`https://wa.me/${whatsappNumber}`}

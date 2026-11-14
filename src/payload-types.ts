@@ -781,6 +781,14 @@ export interface SiteSetting {
   phone?: string | null;
   phoneDisplay?: string | null;
   whatsappNumber?: string | null;
+  /**
+   * Optional. When set, it appears in the footer and contact section as a second callable number.
+   */
+  phone2?: string | null;
+  /**
+   * Optional. Human-readable format shown to visitors, e.g. +91 98765 43210.
+   */
+  phone2Display?: string | null;
   instagram?: string | null;
   instagramHandle?: string | null;
   designerName?: string | null;
@@ -889,6 +897,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   phone?: T;
   phoneDisplay?: T;
   whatsappNumber?: T;
+  phone2?: T;
+  phone2Display?: T;
   instagram?: T;
   instagramHandle?: T;
   designerName?: T;

@@ -65,6 +65,24 @@ export const SiteSettings: GlobalConfig = {
       defaultValue: "919112784198",
     },
     {
+      name: "phone2",
+      type: "text",
+      label: "Secondary Phone",
+      admin: {
+        description:
+          "Optional. When set, it appears in the footer and contact section as a second callable number.",
+      },
+    },
+    {
+      name: "phone2Display",
+      type: "text",
+      label: "Secondary Phone (Display)",
+      admin: {
+        description:
+          "Optional. Human-readable format shown to visitors, e.g. +91 98765 43210.",
+      },
+    },
+    {
       name: "instagram",
       type: "text",
       label: "Instagram (Business)",
